@@ -11,9 +11,9 @@ public class Main {
         int getVoteCount(Votes votes);
     }
 
-    private static void getVoteCount(Votes votes) {
-        VoteCounter counter = theVotes -> theVotes.upvotes() - theVotes.downvotes();
+    private static VoteCounter counter = theVotes -> theVotes.upvotes() - theVotes.downvotes();
 
+    private static void getVoteCount(Votes votes) {
         System.out.println(counter.getVoteCount(votes));
     }
 
