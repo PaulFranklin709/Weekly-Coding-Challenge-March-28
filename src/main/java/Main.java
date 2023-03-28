@@ -1,37 +1,62 @@
+import java.util.LinkedList;
+
 public class Main {
-    public static class Votes {
-        private int upvotes;
-        private int downvotes;
-
-        public Votes(int upvotes, int downvotes) {
-            this.upvotes = upvotes;
-            this.downvotes = downvotes;
-        }
-
-        public int getUpvotes() {
-            return upvotes;
-        }
-
-        public void setUpvotes(int upvotes) {
-            this.upvotes = upvotes;
-        }
-
-        public int getDownvotes() {
-            return downvotes;
-        }
-
-        public void setDownvotes(int downvotes) {
-            this.downvotes = downvotes;
-        }
+    private interface Votes {
+        int upvotes();
+        int downvotes();
     }
+
+    @FunctionalInterface
+    private interface VoteCounter {
+        int getVoteCount(Votes votes);
+    }
+
+    private static void getVoteCount(Votes votes) {
+        VoteCounter counter = theVotes -> theVotes.upvotes() - theVotes.downvotes();
+
+        System.out.println(counter.getVoteCount(votes));
+    }
+
     public static void main(String[] args) {
-        System.out.println(getVoteCount(new Votes(13, 0)));
+        LinkedList<Votes> votes = new LinkedList<>();
 
-        System.out.println(getVoteCount(new Votes(2, 33)));
+        votes.add(new Votes() {
+            @Override
+            public int upvotes() {
+                return 13;
+            }
 
-        System.out.println(getVoteCount(new Votes(132, 132)));
-    }
-    public static int getVoteCount(Votes votes) {
-        return votes.getUpvotes() - votes.getDownvotes();
+            @Override
+            public int downvotes() {
+                return 0;
+            }
+        });
+
+        votes.add(new Votes() {
+            @Override
+            public int upvotes() {
+                return 2;
+            }
+
+            @Override
+            public int downvotes() {
+                return 33;
+            }
+        });
+
+        votes.add(new Votes() {
+            @Override
+            public int upvotes() {
+                return 132;
+            }
+
+            @Override
+            public int downvotes() {
+                return 132;
+            }
+        });
+
+//        https://javabydeveloper.com/java-8-double-colon-operator/
+        votes.forEach(Main::getVoteCount);
     }
 }
